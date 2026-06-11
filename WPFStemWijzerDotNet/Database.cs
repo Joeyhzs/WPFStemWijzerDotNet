@@ -11,7 +11,7 @@ namespace WPFStemWijzerDotNet
 {
 	public class Database
 	{
-		string connectie = @"Server=localhost;Port=3310;Database=stemwijzer;uid=root;pwd=;";
+		string connectie = @"Server=localhost;Database=stemwijzer;uid=root;pwd=;";
 
 
 		//---NIEUWS---//
