@@ -33,8 +33,10 @@ public partial class MainWindow : Window
 		LoadVerkiezingen();
         LoadNieuwsCombo();
 		LoadGebruikerCombo();
+		LoadVragen();
+		LoadVraagCombo();
 
-    }
+	}
 	private void LoadPartijen()
 	{
 		PartijenGrid.ItemsSource = db.GetPartijen().DefaultView;
@@ -67,6 +69,11 @@ public partial class MainWindow : Window
 	private void LoadVerkiezingen()
 	{
 		VerkiezingenGrid.ItemsSource = db.GetVerkiezingen().DefaultView;
+	}
+
+	private void LoadVragen() //
+	{
+		VragenGrid.ItemsSource = db.GetVragen().DefaultView;
 	}
 
 
@@ -387,6 +394,61 @@ public partial class MainWindow : Window
         geselecteerdeId = -1;
         VerkiezingenGrid.SelectedItem = null;
     }
-}
 
+	//------------------ VRAGEN ------------------//
+
+
+	private void BtnVragenToevoegen(object sender, RoutedEventArgs e)
+	{
+		int verkiezingid = Convert.ToInt32(VraagVerkiezing.SelectedValue);
+		string questionText = VraagTekst.Text;
+
+		db.AddVragen(verkiezingid, questionText);
+
+		LoadVragen();
+	}
+
+	private void BtnVragenWijzigen(object sender, RoutedEventArgs e)
+	{
+		if (geselecteerdeId != -1)
+		{
+			int verkiezingenId = Convert.ToInt32(VraagVerkiezing.SelectedValue);
+			string questionText = VraagTekst.Text;
+
+			db.UpdateVragen(geselecteerdeId, verkiezingenId, questionText);
+
+			LoadVragen();
+		}
+	}
+	private void BtnVragenVerwijderen(object sender, RoutedEventArgs e)
+	{
+		if (geselecteerdeId != -1)
+		{
+
+			db.DeleteVragen(geselecteerdeId);
+			LoadVragen();
+		}
+	}
+
+
+
+	private void VragenGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (VragenGrid.SelectedItem != null)
+		{
+			DataRowView row = (DataRowView)VragenGrid.SelectedItem;
+			geselecteerdeId = (int)row["id"];
+			VraagTekst.Text = row["question_text"].ToString();
+			VraagVerkiezing.SelectedValue = row["verkiezingen_id"];
+		}
+	}
+
+	private void LoadVraagCombo()
+	{
+		VraagVerkiezing.ItemsSource = db.GetVerkiezingen().DefaultView;
+		VraagVerkiezing.DisplayMemberPath = "name";
+		VraagVerkiezing.SelectedValuePath = "id";
+	}
+}
+//
 

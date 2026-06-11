@@ -384,5 +384,80 @@ namespace WPFStemWijzerDotNet
 				cmd.ExecuteNonQuery();
 			}
 		}
+	
+	//---VRAGEN---//
+
+
+		public DataTable GetVragen()
+		{
+			DataTable table = new DataTable();
+
+			using (MySqlConnection conn = new MySqlConnection(connectie))
+			{
+				conn.Open();
+				MySqlDataAdapter adapter = new MySqlDataAdapter(@"
+				SELECT 
+				vragen.id,
+				vragen.question_text,
+				verkiezingen.name AS verkiezing_naam
+				FROM vragen
+				INNER JOIN verkiezingen
+				ON vragen.verkiezingen_id = verkiezingen.id
+				", conn);
+				adapter.Fill(table);
+			}
+			return table;
+		}
+
+		public void AddVragen(int verkiezingenId, string questionText)
+		{
+			using (MySqlConnection conn = new MySqlConnection(connectie))
+			{
+				conn.Open();
+
+				MySqlCommand cmd = new MySqlCommand(
+					"INSERT INTO vragen (question_text, verkiezingen_id) VALUES (@text, @id)",
+					conn);
+
+				cmd.Parameters.AddWithValue("@text", questionText);
+				cmd.Parameters.AddWithValue("@id", verkiezingenId);
+
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public void UpdateVragen(int id, int verkiezingenId, string questionText)
+		{
+			using (MySqlConnection conn = new MySqlConnection(connectie))
+			{
+				conn.Open();
+
+				MySqlCommand cmd = new MySqlCommand(
+					"UPDATE vragen SET question_text=@text, verkiezingen_id=@verkiezing WHERE id=@id",
+					conn);
+
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.Parameters.AddWithValue("@text", questionText);
+				cmd.Parameters.AddWithValue("@verkiezing", verkiezingenId);
+
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		public void DeleteVragen(int id)
+		{
+			using (MySqlConnection conn = new MySqlConnection(connectie))
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand("DELETE FROM vragen WHERE id=@id", conn);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+
+
+
+
+
+		}
 	}
 }
