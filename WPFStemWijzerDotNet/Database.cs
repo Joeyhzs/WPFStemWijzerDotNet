@@ -11,7 +11,7 @@ namespace WPFStemWijzerDotNet
 {
 	public class Database
 	{
-		string connectie = @"Server=localhost;Database=stemwijzer;uid=root;pwd=;";
+		string connectie = @"Server=localhost;Port=3310;Database=stemwijzer;uid=root;pwd=;";
 
 
 		//---NIEUWS---//
@@ -89,36 +89,44 @@ namespace WPFStemWijzerDotNet
 			return table;
 		}
 
-		public void AddPartij(string name, string logo, string description)
+		public void AddPartij(string name, string logo, string partijleider, string description)
 		{
 			using (MySqlConnection conn = new MySqlConnection(connectie))
 			{
 				conn.Open();
 
-				MySqlCommand cmd = new MySqlCommand(@"INSERT INTO partijen (name, logo, description)VALUES(@name, @logo, @description)", conn);
+				MySqlCommand cmd = new MySqlCommand(@"INSERT INTO partijen (name, logo, partijleider, description) VALUES (@name, @logo, @partijleider, @description)", conn);
+
 				cmd.Parameters.AddWithValue("@name", name);
 				cmd.Parameters.AddWithValue("@logo", logo);
+				cmd.Parameters.AddWithValue("@partijleider", partijleider);
 				cmd.Parameters.AddWithValue("@description", description);
 
 				cmd.ExecuteNonQuery();
 			}
 		}
 
-		public void UpdatePartij(int id, string name, string logo, string description)
-		{
-			using (MySqlConnection conn = new MySqlConnection(connectie))
-			{
-				conn.Open();
-				MySqlCommand cmd = new MySqlCommand(@"UPDATE partijen SET name = @name, logo = @logo, description = @description WHERE id = @id", conn);
-				cmd.Parameters.AddWithValue("@id", id);
-				cmd.Parameters.AddWithValue("@name", name);
-				cmd.Parameters.AddWithValue("@logo", logo);
-				cmd.Parameters.AddWithValue("@description", description);
-				cmd.ExecuteNonQuery();
-			}
-		}
 
-		public void DeletePartij(int id)
+
+        public void UpdatePartij(int id, string name, string logo, string partijleider, string description)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectie))
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand(@"UPDATE partijen SET name = @name, logo = @logo, partijleider = @partijleider, description = @description WHERE id = @id", conn);
+
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@logo", logo);
+                cmd.Parameters.AddWithValue("@partijleider", partijleider);
+                cmd.Parameters.AddWithValue("@description", description);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeletePartij(int id)
 		{
 			using (MySqlConnection conn = new MySqlConnection(connectie))
 			{
@@ -129,9 +137,6 @@ namespace WPFStemWijzerDotNet
 			}
 		}
 
-
-
-
 		//---REACTIES---//
 		public DataTable GetComments()
 		{
@@ -141,7 +146,7 @@ namespace WPFStemWijzerDotNet
 			{
 				conn.Open();
 
-				string query = @"SELECT comments.id, nieuws.title AS nieuwsTitel, gebruikers.username, comments.reactie_text, comments.created_at FROM comments JOIN nieuws ON comments.nieuws_id = nieuws.id JOIN gebruikers ON comments.gebruikers_id = gebruikers.id";
+				string query = @"SELECT comments.id, nieuws.title AS nieuwsTitel, gebruikers.naam, comments.reactie_text, comments.created_at FROM comments JOIN nieuws ON comments.nieuws_id = nieuws.id JOIN gebruikers ON comments.gebruikers_id = gebruikers.id";
 
 				MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
 				adapter.Fill(table);
@@ -253,44 +258,44 @@ namespace WPFStemWijzerDotNet
 			return table;
 		}
 
-		public void AddGebruiker(string username, string email, string password)
+		public void AddGebruiker(string naam, string email, string password)
 		{
 			using (MySqlConnection conn = new MySqlConnection(connectie))
 			{
 				conn.Open();
 
-				string query = @"INSERT INTO gebruikers(username, email, password_hash, created_at) VALUES(@username, @email, @password, NOW())";
+				string query = @"INSERT INTO gebruikers(naam, email, password_hash, created_at) VALUES(@naam, @email, @password_hash, NOW())";
 
 				MySqlCommand cmd = new MySqlCommand(query, conn);
 
-				cmd.Parameters.AddWithValue("@username", username);
+				cmd.Parameters.AddWithValue("@naam", naam);
 				cmd.Parameters.AddWithValue("@email", email);
-				cmd.Parameters.AddWithValue("@password", password);
+				cmd.Parameters.AddWithValue("@password_hash", password);
 
 				cmd.ExecuteNonQuery();
 			}
 		}
 
-		public void UpdateGebruiker(int id, string username, string email, string password)
-		{
-			using (MySqlConnection conn = new MySqlConnection(connectie))
-			{
-				conn.Open();
+        public void UpdateGebruiker(int id, string naam, string email, string password)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectie))
+            {
+                conn.Open();
 
-				string query = @"UPDATE gebruikers SET username = @username, email = @email, password_hash = @password WHERE id = @id";
+                string query = @"UPDATE gebruikers SET naam = @naam, email = @email, password_hash = @password WHERE id = @id";
 
-				MySqlCommand cmd = new MySqlCommand(query, conn);
+                MySqlCommand cmd = new MySqlCommand(query, conn);
 
-				cmd.Parameters.AddWithValue("@id", id);
-				cmd.Parameters.AddWithValue("@username", username);
-				cmd.Parameters.AddWithValue("@email", email);
-				cmd.Parameters.AddWithValue("@password", password);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@naam", naam);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@password", password);
 
-				cmd.ExecuteNonQuery();
-			}
-		}
+                cmd.ExecuteNonQuery();
+            }
+        }
 
-		public void DeleteGebruiker(int id)
+        public void DeleteGebruiker(int id)
 		{
 			using (MySqlConnection conn = new MySqlConnection(connectie))
 			{
@@ -303,9 +308,6 @@ namespace WPFStemWijzerDotNet
 				cmd.ExecuteNonQuery();
 			}
 		}
-
-
-
 
 		//---VERKIEZINGEN---//
 

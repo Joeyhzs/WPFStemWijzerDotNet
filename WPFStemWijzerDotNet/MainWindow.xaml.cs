@@ -31,8 +31,10 @@ public partial class MainWindow : Window
 		LoadComments();
 		LoadGebruikers();
 		LoadVerkiezingen();
+        LoadNieuwsCombo();
+		LoadGebruikerCombo();
 
-	}
+    }
 	private void LoadPartijen()
 	{
 		PartijenGrid.ItemsSource = db.GetPartijen().DefaultView;
@@ -48,7 +50,16 @@ public partial class MainWindow : Window
 		ReactiesGrid.ItemsSource = db.GetComments().DefaultView;
 	}
 
-	private void LoadGebruikers()
+    private void LoadNieuwsCombo()
+    {
+        ReactieNieuws.ItemsSource = db.GetNieuws().DefaultView;
+    }
+	private void LoadGebruikerCombo()
+	{
+		ReactieGebruiker.ItemsSource = db.GetGebruikers().DefaultView;
+	}
+
+    private void LoadGebruikers()
 	{
 		GebruikersGrid.ItemsSource = db.GetGebruikers().DefaultView;
 	}
@@ -65,7 +76,8 @@ public partial class MainWindow : Window
 	{
 		db.AddNieuws(NieuwsTitel.Text, NieuwsImage.Text, NieuwsContent.Text);
 		LoadNieuws();
-	}
+		ClearNieuwsFields();
+    }
 
 
 	private void BtnNieuwsWijzigen(object sender, RoutedEventArgs e)
@@ -74,7 +86,8 @@ public partial class MainWindow : Window
 		{
 			db.Update(geselecteerdeId, NieuwsTitel.Text, NieuwsImage.Text, NieuwsContent.Text, NieuwsCreatedAt.Text);
 			LoadNieuws();
-		}
+            ClearNieuwsFields();
+        }
 	}
 
 
@@ -84,7 +97,8 @@ public partial class MainWindow : Window
 		{
 			db.Delete(geselecteerdeId);
 			LoadNieuws();
-		}
+            ClearNieuwsFields();
+        }
 	}
 	private void NieuwsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
@@ -99,13 +113,22 @@ public partial class MainWindow : Window
 		}
 	}
 
+    private void ClearNieuwsFields()
+    {
+        NieuwsTitel.Text = "";
+        NieuwsImage.Text = "";
+        NieuwsContent.Text = "";
+        NieuwsCreatedAt.Text = "";
 
-	//----------------------- PARTIJEN ------------------//
-	private void BtnPartijToevoegen_Click(object sender, RoutedEventArgs e)
+        geselecteerdeId = -1;
+        NieuwsGrid.SelectedItem = null;
+    }
+
+    //----------------------- PARTIJEN ------------------//
+    private void BtnPartijToevoegen_Click(object sender, RoutedEventArgs e)
 	{
-		db.AddPartij(PartijNaam.Text, PartijLogo.Text, PartijBeschrijving.Text);
-
-		LoadPartijen();
+        db.AddPartij(PartijNaam.Text, PartijLogo.Text, Partijleider.Text, PartijBeschrijving.Text);
+        LoadPartijen();
 		ClearFields();
 	}
 
@@ -121,22 +144,20 @@ public partial class MainWindow : Window
 
 			PartijLogo.Text = row["logo"].ToString();
 
-			PartijBeschrijving.Text = row["description"].ToString();
-		}
+            Partijleider.Text = row["partijleider"].ToString();
+
+            PartijBeschrijving.Text = row["description"].ToString();
+
+        }
 	}
 
 	private void BtnPartijWijzigen_Click(object sender, RoutedEventArgs e)
 	{
 		if (geselecteerdeId != -1)
 		{
-			db.UpdatePartij(
-				geselecteerdeId,
-				PartijNaam.Text,
-				PartijLogo.Text,
-				PartijBeschrijving.Text
-			);
+            db.UpdatePartij(geselecteerdeId, PartijNaam.Text, PartijLogo.Text, Partijleider.Text,PartijBeschrijving.Text);
 
-			LoadPartijen();
+            LoadPartijen();
 			ClearFields();
 		}
 	}
@@ -152,27 +173,26 @@ public partial class MainWindow : Window
 		}
 	}
 
-	private void ClearFields()
-	{
-		PartijNaam.Text = "";
-		PartijLogo.Text = "";
-		PartijBeschrijving.Text = "";
+    private void ClearFields()
+    {
+        PartijNaam.Text = "";
+        PartijLogo.Text = "";
+        Partijleider.Text = "";
+        PartijBeschrijving.Text = "";
+
+        geselecteerdeId = -1;
+    }
 
 
-		geselecteerdeId = -1;
-	}
+    //------------------ REACTIES ------------------//
 
-
-	//------------------ REACTIES ------------------//
-
-	private void ReactieNieuws_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ReactieNieuws_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (ReactieNieuws.SelectedValue != null)
 		{
 			int nieuwsId = Convert.ToInt32(ReactieNieuws.SelectedValue);
 
-			ReactieGebruiker.ItemsSource =
-				db.GetGebruikersByNieuws(nieuwsId).DefaultView;
+			ReactieGebruiker.ItemsSource = db.GetGebruikersByNieuws(nieuwsId).DefaultView;
 		}
 	}
 
@@ -184,8 +204,7 @@ public partial class MainWindow : Window
 			int nieuwsId = Convert.ToInt32(ReactieNieuws.SelectedValue);
 			int gebruikerId = Convert.ToInt32(ReactieGebruiker.SelectedValue);
 
-			ReactieTekst.Text =
-				db.GetReactieTekst(nieuwsId, gebruikerId);
+			ReactieTekst.Text = db.GetReactieTekst(nieuwsId, gebruikerId);
 		}
 	}
 
@@ -208,78 +227,100 @@ public partial class MainWindow : Window
 			ReactieTekst.Text);
 
 		LoadComments();
-	}
+		ClearReactieFields();
+
+    }
 
 	private void UpdateReactie_Click(object sender, RoutedEventArgs e)
 	{
 		db.UpdateComment(selectedCommentId, ReactieTekst.Text);
 
 		LoadComments();
-	}
+		ClearReactieFields();
+
+    }
 
 	private void DeleteReactie_Click(object sender, RoutedEventArgs e)
 	{
 		db.DeleteComment(selectedCommentId);
 
 		LoadComments();
-	}
+		ClearReactieFields();
 
-	//------------------ GEBRUIKERS ------------------//
-	private void Gebruikers_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		if (GebruikersGrid.SelectedItem is DataRowView row)
-		{
-			selectedGebruikerId =
-				Convert.ToInt32(row["id"]);
+    }
 
-			GebruikerUsername.Text =
-				row["username"].ToString();
+    private void ClearReactieFields()
+    {
+        ReactieNieuws.SelectedIndex = -1;
+        ReactieGebruiker.SelectedIndex = -1;
 
-			GebruikerEmail.Text =
-				row["email"].ToString();
+        ReactieTekst.Text = "";
+        ReactieCreatedAt.Text = "";
 
-			GebruikerPassword.Password =
-				row["password_hash"].ToString();
+        selectedCommentId = -1;
+        ReactiesGrid.SelectedItem = null;
+    }
 
-			GebruikerCreatedAt.Text =
-				row["created_at"].ToString();
-		}
-	}
+    //------------------ GEBRUIKERS ------------------//
+    private void Gebruikers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (GebruikersGrid.SelectedItem is DataRowView row)
+        {
+            selectedGebruikerId = Convert.ToInt32(row["id"]);
+
+            GebruikerNaam.Text = row["naam"].ToString();
+            GebruikerEmail.Text = row["email"].ToString();
+            GebruikerPassword.Password = row["password_hash"].ToString();
+            GebruikerCreatedAt.Text = row["created_at"].ToString();
+        }
+    }
 	private void Addgebruiker_click(object sender, RoutedEventArgs e)
-	{
-		db.AddGebruiker(
-			GebruikerUsername.Text,
-			GebruikerEmail.Text,
-			GebruikerPassword.Password);
+		{
+        db.AddGebruiker(
+            GebruikerNaam.Text,
+            GebruikerEmail.Text,
+            GebruikerPassword.Password);
 
-		LoadGebruikers();
-	}
+        LoadGebruikers();
+        ClearGebruikerFields();
+    }
 
-	private void UpdateGebruiker_Click(object sender, RoutedEventArgs e)
-	{
-		db.UpdateGebruiker(
-			selectedGebruikerId,
-			GebruikerUsername.Text,
-			GebruikerEmail.Text,
-			GebruikerPassword.Password);
+    private void UpdateGebruiker_Click(object sender, RoutedEventArgs e)
+    {
+        db.UpdateGebruiker(
+            selectedGebruikerId,
+            GebruikerNaam.Text,
+            GebruikerEmail.Text,
+            GebruikerPassword.Password);
 
-		LoadGebruikers();
-	}
+        LoadGebruikers();
+        ClearGebruikerFields();
+    }
 
-	private void DeleteGebruiker_Click(object sender, RoutedEventArgs e)
+    private void DeleteGebruiker_Click(object sender, RoutedEventArgs e)
 	{
 		db.DeleteGebruiker(selectedGebruikerId);
 
 		LoadGebruikers();
-	}
+		ClearGebruikerFields();
+
+    }
+
+    private void ClearGebruikerFields()
+    {
+        GebruikerNaam.Text = "";
+        GebruikerEmail.Text = "";
+        GebruikerPassword.Password = "";
+        GebruikerCreatedAt.Text = "";
+
+        selectedGebruikerId = -1;
+        GebruikersGrid.SelectedItem = null;
+    }
 
 
-	//------------------ VERKIEZINGEN ------------------//
+    //------------------ VERKIEZINGEN ------------------//
 
-	
-
-
-	private void BtnVerkiezingToevoegen(object sender, RoutedEventArgs e) // toevoegen
+    private void BtnVerkiezingToevoegen(object sender, RoutedEventArgs e) // toevoegen
 	{
 		if (VerkiezingDatum.SelectedDate == null)
 		{
@@ -288,7 +329,9 @@ public partial class MainWindow : Window
 
 		db.AddVerkiezingen(VerkiezingNaam.Text, VerkiezingDatum.SelectedDate.Value, VerkiezingActief.IsChecked ?? false);
 		LoadVerkiezingen();
-	}
+		ClearVerkiezingFields();
+
+    }
 
 	private void BtnVerkiezingWijzigen(object sender, RoutedEventArgs e) // wijzigen
 	{
@@ -296,7 +339,9 @@ public partial class MainWindow : Window
 		{
 			db.UpdateVerkiezingen(geselecteerdeId, VerkiezingNaam.Text, VerkiezingDatum.SelectedDate.Value, VerkiezingActief.IsChecked ?? false);
 			LoadVerkiezingen();
-		}
+			ClearVerkiezingFields();
+
+        }
 	}
 
 	private void BtnVerkiezingVerwijderen(object sender, RoutedEventArgs e) // verwijderen
@@ -305,10 +350,11 @@ public partial class MainWindow : Window
 		{
 			db.DeleteVerkiezingen(geselecteerdeId);
 			LoadVerkiezingen();
-		}
+			ClearVerkiezingFields();
+
+        }
 	}
 
-	
 
 	private void VerkiezingenGrid_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
 	{
@@ -331,6 +377,16 @@ public partial class MainWindow : Window
 			row["active"] != DBNull.Value &&
 			Convert.ToBoolean(row["active"]);
 	}
+
+    private void ClearVerkiezingFields()
+    {
+        VerkiezingNaam.Text = "";
+        VerkiezingDatum.SelectedDate = null;
+        VerkiezingActief.IsChecked = false;
+
+        geselecteerdeId = -1;
+        VerkiezingenGrid.SelectedItem = null;
+    }
 }
 
 

@@ -308,7 +308,7 @@
 								<TextBlock Text="ID wordt automatisch ingevuld" Style="{StaticResource IdLabel}"/>
 
 								<TextBlock Text="Username" Style="{StaticResource FieldLabel}"/>
-								<TextBox x:Name="GebruikerUsername"/>
+								<TextBox x:Name="GebruikerNaam"/>
 
 								<TextBlock Text="E-mailadres" Style="{StaticResource FieldLabel}"/>
 								<TextBox x:Name="GebruikerEmail"/>
@@ -354,11 +354,11 @@
 							<PasswordBox x:Name="AdminPassword"/>
 
 							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}"
+								<Button Content="Toevoegen"   Width="110" Margin="0,0,6,0" Style="{StaticResource AddButton}"
                                                                                         />
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}"
+								<Button Content="Wijzigen"    Width="110" Margin="0,0,6,0" Style="{StaticResource EditButton}"
                                                                                        />
-								<Button Content="Verwijderen" Width="95" Style="{StaticResource DeleteButton}"
+								<Button Content="Verwijderen" Width="110" Style="{StaticResource DeleteButton}"
                                                                                        />
 							</StackPanel>
 						</StackPanel>
@@ -389,7 +389,10 @@
 							<TextBlock Text="Logo (bestandsnaam/pad)" Style="{StaticResource FieldLabel}"/>
 							<TextBox x:Name="PartijLogo"/>
 
-							<TextBlock Text="Beschrijving (description)" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock Text="Partijleider" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="Partijleider"/>
+
+                            <TextBlock Text="Beschrijving (description)" Style="{StaticResource FieldLabel}"/>
 							<TextBox x:Name="PartijBeschrijving" Height="85"
                                      AcceptsReturn="True" TextWrapping="Wrap"
                                      VerticalScrollBarVisibility="Auto"
@@ -438,9 +441,9 @@
 							<CheckBox x:Name="VerkiezingActief" Content="Actief (active)"/>
 
 							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}" Click="BtnVerkiezingToevoegen"/>
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}" Click="BtnVerkiezingWijzigen"/>
-								<Button Content="Verwijderen" Width="95" Margin="0,0,6,0" Style="{StaticResource DeleteButton}" Click="BtnVerkiezingVerwijderen"/>
+								<Button Content="Toevoegen"   Width="110" Margin="0,0,6,0" Style="{StaticResource AddButton}" Click="BtnVerkiezingToevoegen"/>
+								<Button Content="Wijzigen"    Width="110" Margin="0,0,6,0" Style="{StaticResource EditButton}" Click="BtnVerkiezingWijzigen"/>
+								<Button Content="Verwijderen" Width="110" Margin="0,0,6,0" Style="{StaticResource DeleteButton}" Click="BtnVerkiezingVerwijderen"/>
 							</StackPanel>
 						</StackPanel>
 					</Grid>
@@ -472,9 +475,9 @@
                                      VerticalContentAlignment="Top"/>
 
 							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
-								<Button Content="Verwijderen" Width="95" Style="{StaticResource DeleteButton}"/>
+								<Button Content="Toevoegen"   Width="110" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
+								<Button Content="Wijzigen"    Width="110" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
+								<Button Content="Verwijderen" Width="110" Style="{StaticResource DeleteButton}"/>
 							</StackPanel>
 						</StackPanel>
 					</Grid>
@@ -482,80 +485,43 @@
 			</TabItem>
 
 			<!-- ═══ PARTIJ ANTWOORDEN ═══ -->
-			<TabItem Header="Partij antwoorden">
-				<Border Style="{StaticResource Card}" Margin="0,6,0,0">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="2*"/>
-							<ColumnDefinition Width="12"/>
-							<ColumnDefinition Width="3*"/>
-						</Grid.ColumnDefinitions>
-						<DataGrid x:Name="PartijAntwoordenGrid" Grid.Column="0"/>
-						<Rectangle Grid.Column="1" Style="{StaticResource Divider}"/>
-						<StackPanel Grid.Column="2" Margin="8,0,0,0">
-							<TextBlock Text="Partij antwoord bewerken" Style="{StaticResource SectionTitle}"/>
-							<TextBlock Text="ID wordt automatisch ingevuld" Style="{StaticResource IdLabel}"/>
+            <TabItem Header="Partij antwoorden">
+                <Border Style="{StaticResource Card}" Margin="0,6,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid x:Name="PartijAntwoordenGrid" Grid.Column="0"/>
+                        <Rectangle Grid.Column="1" Style="{StaticResource Divider}"/>
+                        <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                            <TextBlock Text="Partij antwoord bewerken" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="ID wordt automatisch ingevuld" Style="{StaticResource IdLabel}"/>
 
-							<TextBlock Text="Partij (party_id)" Style="{StaticResource FieldLabel}"/>
-							<ComboBox x:Name="PAntwoordPartij"/>
+                            <TextBlock Text="Partij (party_id)" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox x:Name="PAntwoordPartij"/>
 
-							<TextBlock Text="Vraag (question_id)" Style="{StaticResource FieldLabel}"/>
-							<ComboBox x:Name="PAntwoordVraag"/>
+                            <TextBlock Text="Vraag (question_id)" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox x:Name="PAntwoordVraag"/>
 
-							<TextBlock Text="Antwoord (answer)" Style="{StaticResource FieldLabel}"/>
-							<ComboBox x:Name="PAntwoordAntwoord">
-								<ComboBoxItem Content="eens"/>
-								<ComboBoxItem Content="oneens"/>
-							</ComboBox>
+                            <TextBlock Text="Antwoord (answer)" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox x:Name="PAntwoordAntwoord">
+                                <ComboBoxItem Content="eens"/>
+                                <ComboBoxItem Content="oneens"/>
+                            </ComboBox>
 
-							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
-								<Button Content="Verwijderen" Width="95" Style="{StaticResource DeleteButton}"/>
-							</StackPanel>
-						</StackPanel>
-					</Grid>
-				</Border>
-			</TabItem>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <Button Content="Toevoegen"   Width="110" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
+                                <Button Content="Wijzigen"    Width="110" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
+                                <Button Content="Verwijderen" Width="110" Style="{StaticResource DeleteButton}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </TabItem>
 
-			<!-- ═══ GEBRUIKER ANTWOORDEN ═══ -->
-			<TabItem Header="Gebruiker antwoorden">
-				<Border Style="{StaticResource Card}" Margin="0,6,0,0">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="2*"/>
-							<ColumnDefinition Width="12"/>
-							<ColumnDefinition Width="3*"/>
-						</Grid.ColumnDefinitions>
-						<DataGrid x:Name="UserAntwoordenGrid" Grid.Column="0"/>
-						<Rectangle Grid.Column="1" Style="{StaticResource Divider}"/>
-						<StackPanel Grid.Column="2" Margin="8,0,0,0">
-							<TextBlock Text="Gebruiker antwoord bewerken" Style="{StaticResource SectionTitle}"/>
-							<TextBlock Text="ID wordt automatisch ingevuld" Style="{StaticResource IdLabel}"/>
-
-							<TextBlock Text="Gebruiker (user_id)" Style="{StaticResource FieldLabel}"/>
-							<ComboBox x:Name="UAntwoordGebruiker"/>
-
-							<TextBlock Text="Vraag (question_id)" Style="{StaticResource FieldLabel}"/>
-							<ComboBox x:Name="UAntwoordVraag"/>
-
-							<TextBlock Text="Antwoord (answer)" Style="{StaticResource FieldLabel}"/>
-							<ComboBox x:Name="UAntwoordAntwoord">
-								<ComboBoxItem Content="eens"/>
-								<ComboBoxItem Content="oneens"/>
-							</ComboBox>
-
-							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
-								<Button Content="Verwijderen" Width="95" Style="{StaticResource DeleteButton}"/>
-							</StackPanel>
-						</StackPanel>
-					</Grid>
-				</Border>
-			</TabItem>
-
-			<!-- ═══ RESULTATEN ═══ -->
+            <!-- ═══ RESULTATEN ═══ -->
 			<TabItem Header="Resultaten">
 				<Border Style="{StaticResource Card}" Margin="0,6,0,0">
 					<Grid>
@@ -584,9 +550,9 @@
                                      Background="#F9FAFB" Foreground="#6B7280"/>
 
 							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
-								<Button Content="Verwijderen" Width="95" Style="{StaticResource DeleteButton}"/>
+								<Button Content="Toevoegen"   Width="110" Margin="0,0,6,0" Style="{StaticResource AddButton}"/>
+								<Button Content="Wijzigen"    Width="110" Margin="0,0,6,0" Style="{StaticResource EditButton}"/>
+								<Button Content="Verwijderen" Width="110" Style="{StaticResource DeleteButton}"/>
 							</StackPanel>
 						</StackPanel>
 					</Grid>
@@ -666,9 +632,9 @@
                                      Background="#F9FAFB" Foreground="#6B7280"/>
 
 							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button Content="Toevoegen"   Width="95" Margin="0,0,6,0" Style="{StaticResource AddButton}" Click="AddReactie_Click"/>
-								<Button Content="Wijzigen"    Width="90" Margin="0,0,6,0" Style="{StaticResource EditButton}" Click="UpdateReactie_Click"/>
-								<Button Content="Verwijderen" Width="95" Style="{StaticResource DeleteButton}" Click="DeleteReactie_Click"/>
+								<Button Content="Toevoegen"   Width="110" Margin="0,0,6,0" Style="{StaticResource AddButton}" Click="AddReactie_Click"/>
+								<Button Content="Wijzigen"    Width="110" Margin="0,0,6,0" Style="{StaticResource EditButton}" Click="UpdateReactie_Click"/>
+								<Button Content="Verwijderen" Width="110" Style="{StaticResource DeleteButton}" Click="DeleteReactie_Click"/>
 							</StackPanel>
 						</StackPanel>
 					</Grid>
