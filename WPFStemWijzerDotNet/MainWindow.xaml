@@ -367,57 +367,60 @@
 			</TabItem>
 
 			<!-- ═══ PARTIJEN ═══ -->
-			<TabItem Header="Partijen">
-				<Border Style="{StaticResource Card}" Margin="0,6,0,0">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="2*"/>
-							<ColumnDefinition Width="12"/>
-							<ColumnDefinition Width="3*"/>
-						</Grid.ColumnDefinitions>
-						<DataGrid x:Name="PartijenGrid"
-                              Grid.Column="0"
-                              SelectionChanged="PartijenGrid_SelectionChanged"/>
-						<Rectangle Grid.Column="1" Style="{StaticResource Divider}"/>
-						<StackPanel Grid.Column="2" Margin="8,0,0,0">
-							<TextBlock Text="Partij bewerken" Style="{StaticResource SectionTitle}"/>
-							<TextBlock Text="ID wordt automatisch ingevuld" Style="{StaticResource IdLabel}"/>
+            <TabItem Header="Partijen">
+                <Border Style="{StaticResource Card}" Margin="0,6,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid x:Name="PartijenGrid"
+                      Grid.Column="0"
+                      SelectionChanged="PartijenGrid_SelectionChanged"/>
+                        <Rectangle Grid.Column="1" Style="{StaticResource Divider}"/>
+                        <StackPanel Grid.Column="2" Margin="8,0,0,0">
+                            <TextBlock Text="Partij bewerken" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="ID wordt automatisch ingevuld" Style="{StaticResource IdLabel}"/>
 
-							<TextBlock Text="Naam (name)" Style="{StaticResource FieldLabel}"/>
-							<TextBox x:Name="PartijNaam"/>
+                            <TextBlock Text="Naam (name)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="PartijNaam"/>
 
-							<TextBlock Text="Logo (bestandsnaam/pad)" Style="{StaticResource FieldLabel}"/>
-							<TextBox x:Name="PartijLogo"/>
+                            <TextBlock Text="Logo (bestandsnaam bijv. VVD.png)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="PartijLogo"/>
 
                             <TextBlock Text="Partijleider" Style="{StaticResource FieldLabel}"/>
                             <TextBox x:Name="Partijleider"/>
 
+                            <TextBlock Text="Foto partijleider (bestandsnaam bijv. Rutte.png)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="PartijleiderFoto"/>
+
                             <TextBlock Text="Beschrijving (description)" Style="{StaticResource FieldLabel}"/>
-							<TextBox x:Name="PartijBeschrijving" Height="85"
-                                     AcceptsReturn="True" TextWrapping="Wrap"
-                                     VerticalScrollBarVisibility="Auto"
-                                     VerticalContentAlignment="Top"/>
+                            <TextBox x:Name="PartijBeschrijving" Height="85"
+                         AcceptsReturn="True" TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         VerticalContentAlignment="Top"/>
 
-							<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-								<Button x:Name="BtnToevoegen" Content="Toevoegen"
-                                    Width="110" Margin="0,0,6,0"
-                                    Style="{StaticResource AddButton}"
-                                    Click="BtnPartijToevoegen_Click"/>
-								<Button x:Name="BtnWijzigen" Content="Wijzigen"
-                                    Width="110" Margin="0,0,6,0"
-                                    Style="{StaticResource EditButton}"
-                                    Click="BtnPartijWijzigen_Click"/>
-								<Button x:Name="BtnVerwijderen" Content="Verwijderen"
-                                    Width="110"
-                                    Style="{StaticResource DeleteButton}"
-                                    Click="BtnPartijVerwijderen_Click"/>
-							</StackPanel>
-						</StackPanel>
-					</Grid>
-				</Border>
-			</TabItem>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <Button x:Name="BtnToevoegen" Content="Toevoegen"
+                            Width="110" Margin="0,0,6,0"
+                            Style="{StaticResource AddButton}"
+                            Click="BtnPartijToevoegen_Click"/>
+                                <Button x:Name="BtnWijzigen" Content="Wijzigen"
+                            Width="110" Margin="0,0,6,0"
+                            Style="{StaticResource EditButton}"
+                            Click="BtnPartijWijzigen_Click"/>
+                                <Button x:Name="BtnVerwijderen" Content="Verwijderen"
+                            Width="110"
+                            Style="{StaticResource DeleteButton}"
+                            Click="BtnPartijVerwijderen_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </TabItem>
 
-			<!-- ═══ VERKIEZINGEN ═══ -->
+            <!-- ═══ VERKIEZINGEN ═══ -->
 			<TabItem Header="Verkiezingen">
 				<Border Style="{StaticResource Card}" Margin="0,6,0,0">
 					<Grid>

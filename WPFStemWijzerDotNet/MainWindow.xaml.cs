@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 
 namespace WPFStemWijzerDotNet;
@@ -133,62 +134,77 @@ public partial class MainWindow : Window
 
     //----------------------- PARTIJEN ------------------//
     private void BtnPartijToevoegen_Click(object sender, RoutedEventArgs e)
-	{
-        db.AddPartij(PartijNaam.Text, PartijLogo.Text, Partijleider.Text, PartijBeschrijving.Text);
+    {
+        byte[] logoBytes = LeesLogo(PartijLogo.Text);
+        string logoType = PartijLogo.Text.EndsWith(".png") ? "image/png" : "image/jpeg";
+
+        byte[] leiderFotoBytes = LeesLogo(PartijleiderFoto.Text);
+        string leiderFotoType = PartijleiderFoto.Text.EndsWith(".png") ? "image/png" : "image/jpeg";
+
+        db.AddPartij(PartijNaam.Text, logoBytes, logoType, Partijleider.Text, leiderFotoBytes, leiderFotoType, PartijBeschrijving.Text);
         LoadPartijen();
-		ClearFields();
-	}
+        ClearFields();
+    }
 
-	private void PartijenGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		if (PartijenGrid.SelectedItem != null)
-		{
-			DataRowView row = (DataRowView)PartijenGrid.SelectedItem;
-
-			geselecteerdeId = Convert.ToInt32(row["id"]);
-
-			PartijNaam.Text = row["name"].ToString();
-
-			PartijLogo.Text = row["logo"].ToString();
-
+    private void PartijenGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (PartijenGrid.SelectedItem != null)
+        {
+            DataRowView row = (DataRowView)PartijenGrid.SelectedItem;
+            geselecteerdeId = Convert.ToInt32(row["id"]);
+            PartijNaam.Text = row["name"].ToString();
+            PartijLogo.Text = "";
             Partijleider.Text = row["partijleider"].ToString();
-
+            PartijleiderFoto.Text = "";
             PartijBeschrijving.Text = row["description"].ToString();
-
         }
-	}
+    }
 
-	private void BtnPartijWijzigen_Click(object sender, RoutedEventArgs e)
-	{
-		if (geselecteerdeId != -1)
-		{
-            db.UpdatePartij(geselecteerdeId, PartijNaam.Text, PartijLogo.Text, Partijleider.Text,PartijBeschrijving.Text);
+    private void BtnPartijWijzigen_Click(object sender, RoutedEventArgs e)
+    {
+        if (geselecteerdeId != -1)
+        {
+            byte[] logoBytes = LeesLogo(PartijLogo.Text);
+            string logoType = PartijLogo.Text.EndsWith(".png") ? "image/png" : "image/jpeg";
 
+            byte[] leiderFotoBytes = LeesLogo(PartijleiderFoto.Text);
+            string leiderFotoType = PartijleiderFoto.Text.EndsWith(".png") ? "image/png" : "image/jpeg";
+
+            db.UpdatePartij(geselecteerdeId, PartijNaam.Text, logoBytes, logoType, Partijleider.Text, leiderFotoBytes, leiderFotoType, PartijBeschrijving.Text);
             LoadPartijen();
-			ClearFields();
-		}
-	}
+            ClearFields();
+        }
+    }
 
-	private void BtnPartijVerwijderen_Click(object sender, RoutedEventArgs e)
-	{
-		if (geselecteerdeId != -1)
-		{
-			db.DeletePartij(geselecteerdeId);
+    private byte[] LeesLogo(string bestandsnaam)
+    {
+        if (string.IsNullOrEmpty(bestandsnaam)) return null;
+        string logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", bestandsnaam);
+        if (File.Exists(logoPath))
+            return File.ReadAllBytes(logoPath);
+        return null;
+    }
 
-			LoadPartijen();
-			ClearFields();
-		}
-	}
+    private void BtnPartijVerwijderen_Click(object sender, RoutedEventArgs e)
+    {
+        if (geselecteerdeId != -1)
+        {
+            db.DeletePartij(geselecteerdeId);
+            LoadPartijen();
+            ClearFields();
+        }
+    }
 
     private void ClearFields()
     {
         PartijNaam.Text = "";
         PartijLogo.Text = "";
         Partijleider.Text = "";
+        PartijleiderFoto.Text = "";
         PartijBeschrijving.Text = "";
-
         geselecteerdeId = -1;
     }
+
 
 
     //------------------ REACTIES ------------------//

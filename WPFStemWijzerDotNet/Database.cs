@@ -11,7 +11,7 @@ namespace WPFStemWijzerDotNet
 {
 	public class Database
 	{
-		string connectie = @"Server=localhost;Database=stemwijzer;uid=root;pwd=;";
+		string connectie = @"Server=localhost;Port=3310;Database=stemwijzer;uid=root;pwd=;";
 
 
 		//---NIEUWS---//
@@ -89,39 +89,39 @@ namespace WPFStemWijzerDotNet
 			return table;
 		}
 
-		public void AddPartij(string name, string logo, string partijleider, string description)
-		{
-			using (MySqlConnection conn = new MySqlConnection(connectie))
-			{
-				conn.Open();
-
-				MySqlCommand cmd = new MySqlCommand(@"INSERT INTO partijen (name, logo, partijleider, description) VALUES (@name, @logo, @partijleider, @description)", conn);
-
-				cmd.Parameters.AddWithValue("@name", name);
-				cmd.Parameters.AddWithValue("@logo", logo);
-				cmd.Parameters.AddWithValue("@partijleider", partijleider);
-				cmd.Parameters.AddWithValue("@description", description);
-
-				cmd.ExecuteNonQuery();
-			}
-		}
-
-
-
-        public void UpdatePartij(int id, string name, string logo, string partijleider, string description)
+        public void AddPartij(string name, byte[] logo, string logoType, string partijleider, byte[] leiderFoto, string leiderFotoType, string description)
         {
             using (MySqlConnection conn = new MySqlConnection(connectie))
             {
                 conn.Open();
+                MySqlCommand cmd = new MySqlCommand(@"INSERT INTO partijen (name, logo, logo_type, partijleider, partijleider_foto, partijleider_foto_type, description) VALUES (@name, @logo, @logoType, @partijleider, @leiderFoto, @leiderFotoType, @description)", conn);
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@logo", logo);
+                cmd.Parameters.AddWithValue("@logoType", logoType);
+                cmd.Parameters.AddWithValue("@partijleider", partijleider);
+                cmd.Parameters.AddWithValue("@leiderFoto", leiderFoto);
+                cmd.Parameters.AddWithValue("@leiderFotoType", leiderFotoType);
+                cmd.Parameters.AddWithValue("@description", description);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
-                MySqlCommand cmd = new MySqlCommand(@"UPDATE partijen SET name = @name, logo = @logo, partijleider = @partijleider, description = @description WHERE id = @id", conn);
 
+
+        public void UpdatePartij(int id, string name, byte[] logo, string logoType, string partijleider, byte[] leiderFoto, string leiderFotoType, string description)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectie))
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand(@"UPDATE partijen SET name = @name, logo = @logo, logo_type = @logoType, partijleider = @partijleider, partijleider_foto = @leiderFoto, partijleider_foto_type = @leiderFotoType, description = @description WHERE id = @id", conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@name", name);
                 cmd.Parameters.AddWithValue("@logo", logo);
+                cmd.Parameters.AddWithValue("@logoType", logoType);
                 cmd.Parameters.AddWithValue("@partijleider", partijleider);
+                cmd.Parameters.AddWithValue("@leiderFoto", leiderFoto);
+                cmd.Parameters.AddWithValue("@leiderFotoType", leiderFotoType);
                 cmd.Parameters.AddWithValue("@description", description);
-
                 cmd.ExecuteNonQuery();
             }
         }
@@ -395,15 +395,7 @@ namespace WPFStemWijzerDotNet
 			using (MySqlConnection conn = new MySqlConnection(connectie))
 			{
 				conn.Open();
-				MySqlDataAdapter adapter = new MySqlDataAdapter(@"
-				SELECT 
-				vragen.id,
-				vragen.question_text,
-				verkiezingen.name AS verkiezing_naam
-				FROM vragen
-				INNER JOIN verkiezingen
-				ON vragen.verkiezingen_id = verkiezingen.id
-				", conn);
+				MySqlDataAdapter adapter = new MySqlDataAdapter(@"SELECT vragen.id, verkiezingen.name AS verkiezing_naam FROM vragen INNER JOIN verkiezingen ON vragen.verkiezingen_id = verkiezingen.id", conn);
 				adapter.Fill(table);
 			}
 			return table;
@@ -415,10 +407,7 @@ namespace WPFStemWijzerDotNet
 			{
 				conn.Open();
 
-				MySqlCommand cmd = new MySqlCommand(
-					"INSERT INTO vragen (question_text, verkiezingen_id) VALUES (@text, @id)",
-					conn);
-
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO vragen (question_text, verkiezingen_id) VALUES (@text, @id)",conn);
 				cmd.Parameters.AddWithValue("@text", questionText);
 				cmd.Parameters.AddWithValue("@id", verkiezingenId);
 
@@ -432,9 +421,7 @@ namespace WPFStemWijzerDotNet
 			{
 				conn.Open();
 
-				MySqlCommand cmd = new MySqlCommand(
-					"UPDATE vragen SET question_text=@text, verkiezingen_id=@verkiezing WHERE id=@id",
-					conn);
+				MySqlCommand cmd = new MySqlCommand("UPDATE vragen SET question_text=@text, verkiezingen_id=@verkiezing WHERE id=@id", conn);
 
 				cmd.Parameters.AddWithValue("@id", id);
 				cmd.Parameters.AddWithValue("@text", questionText);
@@ -453,11 +440,6 @@ namespace WPFStemWijzerDotNet
 				cmd.Parameters.AddWithValue("@id", id);
 				cmd.ExecuteNonQuery();
 			}
-
-
-
-
-
 		}
 	}
 }
